@@ -235,6 +235,7 @@ function createList() {
         console.log('List added:', data);
         // Here you can clear the input field or update the UI to reflect the new list
         document.getElementById('listNameInput').value = '';
+        getSavedLists();
         // Optionally, refresh the list of lists displayed in the UI
     })
     .catch((error) => {
@@ -245,14 +246,83 @@ function createList() {
 
 function searchList() {
     const listName = document.getElementById('searchListInput').value;
+    const displayIdsChecked = document.getElementById('displayIds').checked;
+    const displayInfoChecked = document.getElementById('displayInfo').checked;
+    const displayPowersChecked = document.getElementById('displayPowers').checked;
+  
+    if (!listName) {
+      alert('Please enter a list name to search.');
+      return;
+    }
+  
+    // Clear previous results
+    const resultsContainer = document.getElementById('list-display');
+    resultsContainer.innerHTML = '';
+  
+    // Define the base URL for the API
+    const baseURL = `http://localhost:3000/api/lists/${listName}`;
+  
+    // Fetch IDs if checkbox is checked
+    if (displayIdsChecked) {
+      fetch(`${baseURL}/ids`)
+        .then(response => response.json())
+        .then(ids => {
+          const idsElement = document.createElement('div');
+          idsElement.textContent = `IDs: ${ids.join(', ')}`;
+          resultsContainer.appendChild(idsElement);
+        });
+    }
+  
+    // Fetch info if checkbox is checked
+    if (displayInfoChecked) {
+      fetch(`${baseURL}/info`)
+        .then(response => response.json())
+        .then(info => {
+          const infoElement = document.createElement('div');
+          infoElement.textContent = 'Info: ' + JSON.stringify(info, null, 2);
+          resultsContainer.appendChild(infoElement);
+        });
+    }
+  
+    // Fetch powers if checkbox is checked
+    if (displayPowersChecked) {
+      fetch(`${baseURL}/powers`)
+        .then(response => response.json())
+        .then(powers => {
+          const powersElement = document.createElement('div');
+          powersElement.textContent = 'Powers: ' + JSON.stringify(powers, null, 2);
+          resultsContainer.appendChild(powersElement);
+        });
+    }
+  }
+  
 
-    // Make a GET request to your server to retrieve the list info
-}
+//function for deleting a list
 
 function deleteList() {
-    const listName = document.getElementById('deleteListInput').value;
 
-    // Make a DELETE request to your server to delete the list
+    const listName = document.getElementById('deleteListInput').value;
+    // Define the endpoint for deleting a specific list
+    const apiEndpoint = `http://localhost:3000/api/lists/${listName}`;
+
+    // Make the DELETE request to the server
+    fetch(apiEndpoint, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text(); 
+    })
+    .then(data => {
+        console.log('List deleted:', data);
+        document.getElementById('deleteListInput').value = '';
+        getSavedLists();
+    })
+    .catch((error) => {
+        console.error('Failed to delete the list:', error);
+    });
 }
 
 
