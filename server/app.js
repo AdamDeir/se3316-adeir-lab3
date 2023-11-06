@@ -147,3 +147,60 @@ app.get('/api/lists', (req, res) => {
     const listNames = Object.keys(superHeroLists); // Get all list names
     res.send(listNames); // Send the list names as a response
 });
+
+app.get('/api/lists/:listName/ids', (req, res) => {
+    const listName = req.params.listName; // Get the list name from the URL parameter
+    const superHeroLists = loadLists(); // Load all lists from the file
+
+    // Check if the list exists
+    if (superHeroLists[listName]) {
+        res.send(superHeroLists[listName]); // Send the array of IDs
+    } else {
+        res.status(404).send('List not found.'); // If the list doesn't exist, send a 404 error
+    }
+});
+
+app.get('/api/lists/:listName/info', (req, res) => {
+    const listName = req.params.listName; // Get the list name from the URL parameter
+    const superHeroLists = loadLists(); // Load all lists from the file
+
+    // Check if the list exists
+    if (superHeroLists[listName]) {
+        // For each ID in the list, fetch the superhero information
+        const superHeroesInfo = superHeroLists[listName].map(id => getSupInfoByID(id)).filter(hero => hero !== null);
+        
+        // If any IDs were invalid (not found), handle appropriately
+        if (superHeroesInfo.length !== superHeroLists[listName].length) {
+            return res.status(404).send('One or more Superhero IDs not found.');
+        }
+        
+        res.send(superHeroesInfo); // Send the array of superhero info objects
+    } else {
+        res.status(404).send('List not found.'); // If the list doesn't exist, send a 404 error
+    }
+});
+
+app.get('/api/lists/:listName/powers', (req, res) => {
+    const listName = req.params.listName; // Get the list name from the URL parameter
+    const superHeroLists = loadLists(); // Load all lists from the file
+
+    // Check if the list exists
+    if (superHeroLists[listName]) {
+        // For each ID in the list, fetch the superhero powers
+        const superHeroesPowers = superHeroLists[listName].map(id => {
+            const superhero = getSupInfoByID(id);
+            return superhero ? getSupPowersByName(superhero.name) : null;
+        }).filter(powers => powers !== null);
+
+        // If any IDs were invalid (not found), handle appropriately
+        if (superHeroesPowers.length !== superHeroLists[listName].length) {
+            return res.status(404).send('One or more Superhero IDs not found or do not have powers listed.');
+        }
+        
+        res.send(superHeroesPowers); // Send the array of superhero powers objects
+    } else {
+        res.status(404).send('List not found.'); // If the list doesn't exist, send a 404 error
+    }
+});
+
+
