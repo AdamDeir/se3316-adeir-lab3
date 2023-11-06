@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Superhero Directory</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Superhero Directory</h1>
+    
+    <!-- Search Section -->
+    <input type="text" id="searchField" placeholder="Search Superheroes...">
+    <select id="searchType">
+        <option value="id">ID</option>
+        <option value="name">Name</option>
+        <option value="Gender">Gender</option>
+        <option value="Eye color">Eye Color</option>
+        <option value="Race">Race</option>
+        <option value="Hair color">Hair Color</option>
+        <option value="Height">Height</option>
+        <option value="Publisher">Publisher</option>
+        <option value="Skin color">Skin Color</option>
+        <option value="Alignment">Alignment</option>
+        <option value="Weight">Weight</option>
+        
+    </select>
+    <input type="text" id="nSearch" placeholder="Display up to...">
+    <button id="searchButton">Search</button>
+    <button id="displayPublishers">Display All Publishers</button>
+
+     <!-- Checkbox Section -->
+     <div id="checkboxSection">
+        <input type="checkbox" id="supInfoBox" name="supInfoBox">
+        <label for="supInfoBox">Search For Info</label>
+
+        <input type="checkbox" id="supPowerBox" name="supPowerBox">
+        <label for="supPowerBox">Search For Powers</label>
+    </div>
+
+
+    <!-- Results Section -->
+    <div id="searchResults"></div>
+    
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
