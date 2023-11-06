@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('searchButton');
     searchButton.onclick = function() {
         searchSuperheroes();
-        //console.log("yp yp yp");
+        
     };
 });
 
@@ -176,4 +176,84 @@ function displayPublishers(publishers) {
 
     resultsContainer.appendChild(list);
 }
+
+
+
+//List functionality
+
+function getSavedLists(){
+
+    const urlSearchLists = new URL('/api/lists', window.location.origin);
+    fetch(urlSearchLists) 
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        // Assuming 'data' is an object where keys are list names
+        const listsContainer = document.getElementById('list-display');
+        listsContainer.innerHTML = ''; // Clear existing content
+
+        // Iterate over each list
+        data.forEach(listName => {
+            const listItem = document.createElement('div');
+            listItem.textContent = listName;
+            // Optionally, you can add buttons or links for other actions (delete, view, etc.)
+            listsContainer.appendChild(listItem);
+        });
+    })
+    .catch(error => console.error('Error:', error)); 
+}
+
+
+
+function createList() {
+    const listName = document.getElementById('listNameInput').value; // Get the list name from the input field
+
+    // Don't send an empty name
+    if (!listName) {
+        alert('Please enter a list name.');
+        return;
+    }
+
+    // Define the endpoint where the list will be added
+    const apiEndpoint = 'http://localhost:3000/api/lists/';
+
+    // Make the HTTP POST request to the server
+    fetch(apiEndpoint + encodeURIComponent(listName), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        //body: JSON.stringify({}) // If you need to send additional data, add it here
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.text();
+    })
+    .then(data => {
+        console.log('List added:', data);
+        // Here you can clear the input field or update the UI to reflect the new list
+        document.getElementById('listNameInput').value = '';
+        // Optionally, refresh the list of lists displayed in the UI
+    })
+    .catch((error) => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+
+
+function searchList() {
+    const listName = document.getElementById('searchListInput').value;
+
+    // Make a GET request to your server to retrieve the list info
+}
+
+function deleteList() {
+    const listName = document.getElementById('deleteListInput').value;
+
+    // Make a DELETE request to your server to delete the list
+}
+
+
 

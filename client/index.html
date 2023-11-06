@@ -40,6 +40,38 @@
 
     <!-- Results Section -->
     <div id="searchResults"></div>
+
+
+        <!-- List Management Section -->
+        <section id="list-management">
+            <h2>List Management</h2>
+            <div id="savedListDisplay">
+                <button onclick="getSavedLists()">Display Saved Lists</button>
+            </div>
+            
+            <div>
+                <input type="text" id="listNameInput" placeholder="Enter list name">
+                <button onclick="createList()">Create List</button>
+            </div>
+    
+            <div>
+                <input type="text" id="searchListInput" placeholder="Enter list name to search">
+                <button onclick="searchList()">Search List</button>
+            </div>
+            
+            <div>
+                <input type="text" id="deleteListInput" placeholder="Enter list name to delete">
+                <button onclick="deleteList()">Delete List</button>
+            </div>
+            
+            <div id="list-display">
+                <!-- Lists will be displayed here -->
+            </div>
+    
+        </section>
+
+
+
     
     <!-- Scripts -->
     <script src="script.js"></script>
