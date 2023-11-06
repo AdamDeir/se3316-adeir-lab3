@@ -203,4 +203,18 @@ app.get('/api/lists/:listName/powers', (req, res) => {
     }
 });
 
+app.delete('/api/lists/:listName', (req, res) => {
+    const listName = req.params.listName; // Get the list name from the URL parameter
+    const superHeroLists = loadLists(); // Load all lists from the file
+
+    // Check if the list exists
+    if (superHeroLists[listName]) {
+        delete superHeroLists[listName]; // Delete the list
+        saveLists(superHeroLists); // Save the updated lists to the file
+        res.send(`List '${listName}' deleted successfully.`);
+    } else {
+        res.status(404).send('List not found.'); // If the list doesn't exist, send a 404 error
+    }
+});
+
 
