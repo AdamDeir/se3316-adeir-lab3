@@ -1,0 +1,18 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+#superheroList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#superheroList li {
+    background-color: #e2e2e2;
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 4px;
+}
