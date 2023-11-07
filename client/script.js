@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
+let currentDisplayedHeros ="";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -130,7 +130,8 @@ function displayHerosId(heros){
     const resultsContainer = document.getElementById('searchResults');
     resultsContainer.innerHTML = ''; // Clear previous results
     const list = document.createElement('ul');
-
+    currentDisplayedHeros = heros;
+    
     for(let key in heros){
         const listItem = document.createElement('li');
         if(heros.hasOwnProperty(key)){
@@ -145,41 +146,45 @@ function displayHerosId(heros){
 }
 
 function displayHeros(heros){
-    console.log(heros);
-    console.log("yo yo y yo y oy");
     const resultsContainer = document.getElementById('searchResults');
     resultsContainer.innerHTML = ''; // Clear previous results
-
+    currentDisplayedHeros = heros;
     if (heros.length === 0) {
         resultsContainer.innerText = 'No Heros found.';
         return;
     } 
-     
-    // Create a list to display the results
-    const list = document.createElement('ul');
-        
-    heros.forEach(function(heros) {
 
-        for(let key in heros){
-            const listItem = document.createElement('li');
-            if(heros.hasOwnProperty(key)){
-                console.log(key + " - " + heros[key]);
-                listItem.textContent = key + " - " + heros[key];
-                list.appendChild(listItem);
-                
+    // Create a container for all hero cards
+    const cardsContainer = document.createElement('div');
+    cardsContainer.className = 'cards-container';
+        
+    heros.forEach(function(hero) {
+        // Create a card for each hero
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        for(let key in hero){
+            if(hero.hasOwnProperty(key)){
+                // Create a paragraph for each attribute
+                const para = document.createElement('p');
+                para.innerHTML = `<strong>${key}:</strong> ${hero[key]}`;
+                card.appendChild(para);
             }
         }
-        
-    });   
-    resultsContainer.appendChild(list);
 
+        // Append the card to the container
+        cardsContainer.appendChild(card);
+    });
+
+    resultsContainer.appendChild(cardsContainer);
 }
+
 
 
 function displayPublishers(publishers) {
     const resultsContainer = document.getElementById('searchResults');
     resultsContainer.innerHTML = ''; // Clear previous results
-
+    
     if (publishers.length === 0) {
         resultsContainer.innerText = 'No publishers found.';
         return;
@@ -255,7 +260,7 @@ function createList() {
         if (!response.ok) {
             throw new Error('Network response was not ok: ' + response.statusText);
         }
-        return response.text(); // assuming the server responds with JSON
+        return response.text(); 
     })
     .then(data => {
         console.log('List created or updated:', data);
@@ -350,6 +355,50 @@ function deleteList() {
     .catch((error) => {
         console.error('Failed to delete the list:', error);
     });
+}
+
+//sort functionality
+
+// Event listener for the sort button
+document.getElementById('applySort').addEventListener('click', function() {
+    // Clear previous results
+    const resultsContainer = document.getElementById('searchResults');
+    resultsContainer.innerHTML = '';
+
+    // Determine which property to sort by based on the checked checkbox
+    let propertyToSortBy = null;
+    if (document.getElementById('sortByName').checked) propertyToSortBy = 'name';
+    if (document.getElementById('sortByRace').checked) propertyToSortBy = 'Race'; // Case-sensitive
+    if (document.getElementById('sortByPublisher').checked) propertyToSortBy = 'Publisher'; // Case-sensitive
+    
+
+    if (propertyToSortBy) {
+        displaySortedHeros(propertyToSortBy);
+    }
+});
+
+function displaySortedHeros(property) {
+    // Sort heroes by the specified property
+    const sortedHeros = [...currentDisplayedHeros].sort((a, b) => {
+        // Use toString to handle non-string properties
+        return a[property].toString().localeCompare(b[property].toString(), undefined, { numeric: true, sensitivity: 'base' });
+    });
+
+    // Create a container for the sorted property display
+    const propertyContainer = document.createElement('div');
+    propertyContainer.className = 'property-container';
+
+    // Add sorted heroes to the container
+    sortedHeros.forEach(hero => {
+        const para = document.createElement('p');
+        para.className = 'hero-property';
+        // Display the property value with a label, making sure to check for undefined values
+        para.innerHTML = `<strong>${property.charAt(0).toUpperCase() + property.slice(1)}:</strong> ${hero[property] || 'N/A'}`;
+        propertyContainer.appendChild(para);
+    });
+
+    // Append the sorted results to the results container
+    document.getElementById('searchResults').appendChild(propertyContainer);
 }
 
 

@@ -1,18 +1,160 @@
+/* General body styles */
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-#superheroList {
-    list-style-type: none;
     padding: 0;
+    background: #f4f4f4;
 }
 
-#superheroList li {
-    background-color: #e2e2e2;
-    margin-top: 5px;
+/* Container for centering the content */
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+/* Header styles */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Search Section */
+#searchField, #searchType, #nSearch, #searchButton, #displayPublishers, #clearSearch {
     padding: 10px;
-    border-radius: 4px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    cursor: pointer;
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #555;
+}
+
+/* Checkbox Section */
+#checkboxSection {
+    margin: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+#checkboxSection label {
+    margin-left: 5px;
+}
+
+/* Results Section */
+#searchResults {
+    margin: 10px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+/* List Management Section */
+#list-management {
+    background: #e2e2e2;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+#list-management h2 {
+    color: #333;
+}
+
+#list-management input[type="text"] {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#list-display {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    button {
+        padding: 10px;
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    #searchField, #searchType, #nSearch {
+        margin: 10px 0;
+        width: calc(100% - 22px); /* accounting for padding and border */
+    }
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background: #c0bcbc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(168, 34, 34, 0.1);
+    padding: 20px;
+    margin: 10px;
+    width: calc(33.333% - 20px); /* Adjust card width here */
+}
+
+.card p {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.card p strong {
+    font-weight: bold;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .card {
+        width: calc(50% - 20px); /* Adjust card width for small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        width: 100%; /* Full width cards on very small screens */
+    }
+}
+
+
+#sorting-section {
+    display: flex; /* Align children inline */
+    align-items: center; /* Align items vertically */
+    justify-content: left; /* Center items horizontally */
+    flex-wrap: wrap; /* Wrap items to next line on small screens */
+}
+
+#sorting-section div {
+    margin-right: 10px; /* Add some space between the sort options */
+}
+
+#sorting-section button {
+    margin-left: 10px; /* Add some space before the sort button */
 }
