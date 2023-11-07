@@ -27,10 +27,11 @@
     <input type="text" id="nSearch" placeholder="Display up to...">
     <button id="searchButton">Search</button>
     <button id="displayPublishers">Display All Publishers</button>
+    <button id="clearSearch">Clear Results</button>
 
      <!-- Checkbox Section -->
      <div id="checkboxSection">
-        <input type="checkbox" id="supInfoBox" name="supInfoBox">
+        <input type="checkbox" id="supInfoBox" name="supInfoBox" checked>
         <label for="supInfoBox">Search For Info</label>
 
         <input type="checkbox" id="supPowerBox" name="supPowerBox">
@@ -51,9 +52,12 @@
             
             <div>
                 <input type="text" id="listNameInput" placeholder="Enter list name">
-                <button onclick="createList()">Create List</button>
+                <input type="text" id="listIdInput" placeholder="Enter Id's to add to list">
+                <button onclick="createList()">Add</button>
+                
             </div>
     
+
             <div>
                 <input type="text" id="searchListInput" placeholder="Enter list name to search">
                 <button onclick="searchList()">Search List</button>

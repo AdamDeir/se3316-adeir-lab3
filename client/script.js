@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', function () {
         
     };
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const clearButton = document.getElementById('clearSearch');
+    clearButton.onclick = function() {
+    const resultsContainer = document.getElementById('searchResults');
+    resultsContainer.innerHTML = ''; // Clear previous results
+        
+    };
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     const publisherButton = document.getElementById('displayPublishers');
@@ -81,7 +89,7 @@ function searchSuperheroes() {
     if(searchNum ===0){
         const params = { field: searchType, pattern: searchField};
         urlSearch.search = new URLSearchParams(params).toString();
-        console.log("yoyoyoy");
+        
         }else{
           const params = { field: searchType, pattern: searchField, n: searchNum };
           console.log(searchType,searchField, searchNum);
@@ -101,11 +109,22 @@ function getNumericValueOrUndefined(value) {
   }
 
 function searchId(id){
-const urlID = new URL(`/api/superhero-info/${id}`, window.location.origin);
-fetch(urlID) // Replace with your actual endpoint
-.then(response => response.json())
-.then(heros => displayHerosId(heros))
-.catch(error => console.error('Error:', error));
+    const infoCheckbox = document.getElementById('supInfoBox');
+    const powersCheckbox = document.getElementById('supPowerBox');
+    if(infoCheckbox.checked){
+       const urlID = new URL(`/api/superhero-info/${id}`, window.location.origin);
+        fetch(urlID) 
+        .then(response => response.json())
+        .then(heros => displayHerosId(heros))
+        .catch(error => console.error('Error:', error)); 
+    }else if(powersCheckbox.checked){
+        const urlID = new URL(`/api/superhero-powers/${id}`, window.location.origin);
+        fetch(urlID) 
+        .then(response => response.json())
+        .then(heros => displayHerosId(heros))
+        .catch(error => console.error('Error:', error)); 
+    }    
+
 }
 function displayHerosId(heros){
     const resultsContainer = document.getElementById('searchResults');
@@ -207,41 +226,49 @@ function getSavedLists(){
 
 function createList() {
     const listName = document.getElementById('listNameInput').value; // Get the list name from the input field
+    const idsToAdd = document.getElementById('listIdInput').value;
 
-    // Don't send an empty name
-    if (!listName) {
+    // Only split the idsToAdd and map to integers if it's not an empty string
+    const idsArray = idsToAdd ? idsToAdd.split(',').map(id => parseInt(id.trim(), 10)) : [];
+
+    // Check if the listName is not empty
+    if (!listName.trim()) {
         alert('Please enter a list name.');
         return;
     }
 
-    // Define the endpoint where the list will be added
-    const apiEndpoint = 'http://localhost:3000/api/lists/';
+    // Define the endpoint for the API
+    const apiEndpoint = 'http://localhost:3000/api/lists/' + encodeURIComponent(listName);
 
-    // Make the HTTP POST request to the server
-    fetch(apiEndpoint + encodeURIComponent(listName), {
-        method: 'POST',
+    // Determine the method based on whether we have IDs to add
+    const method = idsArray.length > 0 ? 'PUT' : 'POST';
+
+    // Make the HTTP request to the server
+    fetch(apiEndpoint, {
+        method: method, // Use PUT if updating with IDs, POST if creating a new list
         headers: {
             'Content-Type': 'application/json',
         },
-        //body: JSON.stringify({}) // If you need to send additional data, add it here
+        body: JSON.stringify({ superheroIds: idsArray }) // Send superhero IDs as part of the request body
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            throw new Error('Network response was not ok: ' + response.statusText);
         }
-        return response.text();
+        return response.text(); // assuming the server responds with JSON
     })
     .then(data => {
-        console.log('List added:', data);
-        // Here you can clear the input field or update the UI to reflect the new list
+        console.log('List created or updated:', data);
+        // Clear the input fields or update the UI as needed
         document.getElementById('listNameInput').value = '';
-        getSavedLists();
-        // Optionally, refresh the list of lists displayed in the UI
+        document.getElementById('listIdInput').value = '';
+        getSavedLists(); 
     })
     .catch((error) => {
         console.error('There has been a problem with your fetch operation:', error);
     });
 }
+
 
 
 function searchList() {

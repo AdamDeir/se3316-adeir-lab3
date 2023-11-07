@@ -133,13 +133,12 @@ app.put('/api/lists/:listName', (req, res) => {
     const superheroIds = req.body.superheroIds;
     const superHeroLists = loadLists(); // Load existing lists
 
-    if (!superHeroLists[listName]) {
-        return res.status(404).send('List name does not exist.');
-    }
-
+    // if (!superHeroLists[listName]) {
+    //     return res.status(404).send('List name does not exist.');
+    // }
     superHeroLists[listName] = superheroIds;
     saveLists(superHeroLists); // Save updated lists
-    res.status(200).send('List updated successfully.');
+    res.status(200).send('shs');
 });
 
 app.get('/api/lists', (req, res) => {
