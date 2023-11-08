@@ -75,10 +75,10 @@ function showPublisher(){
 
 function searchSuperheroes() {
     const searchField = document.getElementById('searchField').value;
+    searchField = escapeHTML(searchField);//sanitize the user input
     const searchType = document.getElementById('searchType').value;
     const searchNumValue = document.getElementById('nSearch').value;
     const searchNum = getNumericValueOrUndefined(searchNumValue);
-    console.log(searchNum);
 
     if(searchType === 'id'){
        searchId(searchField);
@@ -102,7 +102,7 @@ function searchSuperheroes() {
     .catch(error => console.error('Error:', error)); 
     }
 }
-
+//function that checks to make sure the user input was a number, if it was not then the value is set to undefined
 function getNumericValueOrUndefined(value) {
     const number = Number(value);
     return isNaN(number) ? undefined : number;
@@ -128,14 +128,13 @@ function searchId(id){
 }
 function displayHerosId(heros){
     const resultsContainer = document.getElementById('searchResults');
-    resultsContainer.innerHTML = ''; // Clear previous results
+    resultsContainer.innerHTML = ''; // Clear previous results -- ok to use this as it is not user generated content
     const list = document.createElement('ul');
     currentDisplayedHeros = heros;
     
     for(let key in heros){
         const listItem = document.createElement('li');
         if(heros.hasOwnProperty(key)){
-            console.log(key + " - " + heros[key]);
             listItem.textContent = key + " - " + heros[key];
             list.appendChild(listItem);
             
@@ -278,54 +277,93 @@ function createList() {
 
 function searchList() {
     const listName = document.getElementById('searchListInput').value;
-    const displayIdsChecked = document.getElementById('displayIds').checked;
-    const displayInfoChecked = document.getElementById('displayInfo').checked;
-    const displayPowersChecked = document.getElementById('displayPowers').checked;
+  const resultsContainer = document.getElementById('list-display');
+  resultsContainer.innerHTML = ''; // Clear previous results
+  const baseURL = `http://localhost:3000/api/lists/${listName}`;
+
+  // Check if checkboxes are checked and fetch data
+  const displayIdsChecked = document.getElementById('displayIds').checked;
+  const displayInfoChecked = document.getElementById('displayInfo').checked;
+  const displayPowersChecked = document.getElementById('displayPowers').checked;
+
+  if (displayIdsChecked) {
+    fetch(`${baseURL}/ids`)
+      .then(response => response.json())
+      .then(ids => displayIds(ids))
+      .catch(error => console.error('Error fetching IDs:', error));
+  }
   
-    if (!listName) {
-      alert('Please enter a list name to search.');
-      return;
-    }
+  if (displayInfoChecked) {
+    fetch(`${baseURL}/info`)
+      .then(response => response.json())
+      .then(info => displayListInfo(info))
+      .catch(error => console.error('Error fetching info:', error));
+  }
+
+  if (displayPowersChecked) {
+    fetch(`${baseURL}/powers`)
+      .then(response => response.json())
+      .then(powers => displayPowers(powers))
+      .catch(error => console.error('Error fetching powers:', error));
+  }
   
-    // Clear previous results
-    const resultsContainer = document.getElementById('list-display');
-    resultsContainer.innerHTML = '';
+  }
+
+
+  // Function to display hero information in a card format
+  function displayIds(ids) {
+    const idsElement = document.createElement('div');
+    idsElement.className = 'card';
+    idsElement.innerHTML = `<h3>ID List:</h3><p>${ids.join(', ')}</p>`;
+    document.getElementById('list-display').appendChild(idsElement);
+  }
   
-    // Define the base URL for the API
-    const baseURL = `http://localhost:3000/api/lists/${listName}`;
+  function displayListInfo(info) {
+    const cardsContainer = document.createElement('div');
+    cardsContainer.className = 'cards-container';
+    info.forEach(hero => {
+      const card = createHeroCard(hero);
+      cardsContainer.appendChild(card);
+    });
+    document.getElementById('list-display').appendChild(cardsContainer);
+  }
   
-    // Fetch IDs if checkbox is checked
-    if (displayIdsChecked) {
-      fetch(`${baseURL}/ids`)
-        .then(response => response.json())
-        .then(ids => {
-          const idsElement = document.createElement('div');
-          idsElement.textContent = `IDs: ${ids.join(', ')}`;
-          resultsContainer.appendChild(idsElement);
-        });
-    }
+  function displayPowers(powersArray) {
+    // Assuming powersArray is an array of objects where each object contains the powers of a hero
+    const powersElement = document.createElement('div');
+    powersElement.className = 'card';
+    
+    // Generate a list item for each power in each hero's powers object
+    let powersListHTML = '';
+    powersArray.forEach(powers => {
+      for (let [power, value] of Object.entries(powers)) {
+        if (value === 'True') {
+          powersListHTML += `<li>${power}</li>`;
+        }
+      }
+    });
   
-    // Fetch info if checkbox is checked
-    if (displayInfoChecked) {
-      fetch(`${baseURL}/info`)
-        .then(response => response.json())
-        .then(info => {
-          const infoElement = document.createElement('div');
-          infoElement.textContent = 'Info: ' + JSON.stringify(info, null, 2);
-          resultsContainer.appendChild(infoElement);
-        });
-    }
+    powersElement.innerHTML = `<h3>Superhero Powers:</h3><ul>${powersListHTML}</ul>`;
+    document.getElementById('list-display').appendChild(powersElement);
+  }
   
-    // Fetch powers if checkbox is checked
-    if (displayPowersChecked) {
-      fetch(`${baseURL}/powers`)
-        .then(response => response.json())
-        .then(powers => {
-          const powersElement = document.createElement('div');
-          powersElement.textContent = 'Powers: ' + JSON.stringify(powers, null, 2);
-          resultsContainer.appendChild(powersElement);
-        });
-    }
+  function createHeroCard(hero) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    let cardContent = `<h3>${hero.name}</h3>`;
+    Object.keys(hero).forEach(key => {
+      if (key !== 'id' && key !== 'name') { // Skipping 'id' and 'name' since 'name' is already shown
+        cardContent += `<p><strong>${formatKey(key)}:</strong> ${hero[key]}</p>`;
+      }
+    });
+    card.innerHTML = cardContent;
+    return card;
+  }
+  
+  function formatKey(key) {
+    // Convert camelCase to Regular Case and capitalize the first letter
+    const formatted = key.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+    return formatted;
   }
   
 

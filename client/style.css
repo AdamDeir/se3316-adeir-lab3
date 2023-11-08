@@ -147,7 +147,7 @@ button:hover {
 #sorting-section {
     display: flex; /* Align children inline */
     align-items: center; /* Align items vertically */
-    justify-content: left; /* Center items horizontally */
+    justify-content: center; /* Center items horizontally */
     flex-wrap: wrap; /* Wrap items to next line on small screens */
 }
 
@@ -158,3 +158,36 @@ button:hover {
 #sorting-section button {
     margin-left: 10px; /* Add some space before the sort button */
 }
+
+.list-results {
+    background: #f7f7f7;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .list-results strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .list-results span, .list-results ul {
+    padding-left: 20px;
+  }
+  
+  .list-results ul {
+    list-style-type: none; /* Removes default bullets */
+    padding-left: 0;
+  }
+  
+  .list-results li {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+  
+  
