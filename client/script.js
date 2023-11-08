@@ -130,6 +130,7 @@ function searchId(id){
         .catch(error => console.error('Error:', error)); 
     }else if(powersCheckbox.checked){
         const urlID = new URL(`/api/superhero-powers/${id}`, window.location.origin);
+        console.log(urlID);
         fetch(urlID) 
         .then(response => response.json())
         .then(heros => displayHerosId(heros))
@@ -306,7 +307,7 @@ function createList() {
 
 //function to search for a list
 function searchList() {
-    const listName = document.getElementById('searchListInput').value;
+    let listName = document.getElementById('searchListInput').value;
     listName = sanitizeString(listName);//sanitize user input
   const resultsContainer = document.getElementById('list-display');
   resultsContainer.innerHTML = ''; // Clear previous results
@@ -403,7 +404,8 @@ function searchList() {
 
 function deleteList() {
 
-    const listName = document.getElementById('deleteListInput').value;
+    let listName = document.getElementById('deleteListInput').value;
+    lsitName = sanitizeString(listName);//sanitize user input
     // Define the endpoint for deleting a specific list
     const apiEndpoint = `http://localhost:3000/api/lists/${listName}`;
 
