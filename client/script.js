@@ -311,7 +311,7 @@ function searchList() {
     listName = sanitizeString(listName);//sanitize user input
   const resultsContainer = document.getElementById('list-display');
   resultsContainer.innerHTML = ''; // Clear previous results
-  const baseURL = `http://localhost:3000/api/lists/${listName}`;
+  const baseURL = `/api/lists/${listName}`;
 
   // Check if checkboxes are checked and fetch data
   const displayIdsChecked = document.getElementById('displayIds').checked;
@@ -407,7 +407,7 @@ function deleteList() {
     let listName = document.getElementById('deleteListInput').value;
     lsitName = sanitizeString(listName);//sanitize user input
     // Define the endpoint for deleting a specific list
-    const apiEndpoint = `http://localhost:3000/api/lists/${listName}`;
+    const apiEndpoint = `/api/lists/${listName}`;
 
     // Make the DELETE request to the server
     fetch(apiEndpoint, {
