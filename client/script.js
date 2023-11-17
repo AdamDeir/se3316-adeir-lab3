@@ -272,7 +272,7 @@ function createList() {
     }
 
     // Define the endpoint for the API
-    const apiEndpoint = 'http://localhost:3000/api/lists/' + encodeURIComponent(listName);
+    const apiEndpoint = '/api/lists/' + encodeURIComponent(listName);
 
     // Determine the method based on whether we have IDs to add
     const method = idsArray.length > 0 ? 'PUT' : 'POST';
